@@ -638,6 +638,11 @@
     }
     nav.tabs .sep { display: none; }
 
+    /* Primary actions are easiest to reach on the left edge of the scrolling strip */
+    nav.tabs button[data-view="atlas"]      { order: -3; }
+    nav.tabs button[data-view="submit"]     { order: -2; }
+    nav.tabs button[data-view="membership"] { order: -1; }
+
     .section-head { margin: 18px 0 14px; }
     .section-head h2 { font-size: 26px; }
     .section-head p { font-size: 16px; }
