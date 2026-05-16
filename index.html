@@ -375,6 +375,9 @@
   .member-actions button:hover { color: var(--ink); }
   .member-actions .act-delete:hover { color: var(--accent); }
 
+  /* The hidden attribute must override our display: flex rules */
+  [hidden] { display: none !important; }
+
   /* Edit banner inside forms */
   .edit-banner {
     margin: 0 0 16px;
