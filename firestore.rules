@@ -1,0 +1,78 @@
+rules_version = '2';
+
+// Paste these into Firebase Console → Firestore Database → Rules
+// before the 30-day test-mode window expires.
+//
+// Trust model: anyone with the link can read, create, edit, or delete.
+// Submissions are still validated for shape (name + valid continent, size caps).
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /restaurants/{id} {
+
+      allow read: if true;
+
+      allow create: if
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() < 200 &&
+        request.resource.data.added_by is string &&
+        request.resource.data.added_by.size() > 0 &&
+        request.resource.data.added_by.size() < 100 &&
+        request.resource.data.continent in [
+          'north-america', 'south-america', 'africa',
+          'europe', 'asia', 'australia'
+        ] &&
+        request.resource.size < 25 &&
+        request.resource.data.submitted_at == request.time;
+
+      allow update: if
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() < 200 &&
+        request.resource.data.continent in [
+          'north-america', 'south-america', 'africa',
+          'europe', 'asia', 'australia'
+        ] &&
+        request.resource.size < 25;
+
+      allow delete: if true;
+    }
+
+    match /members/{id} {
+
+      allow read: if true;
+
+      allow create: if
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() < 150 &&
+        request.resource.data.master is string &&
+        request.resource.data.master.size() > 0 &&
+        request.resource.data.master.size() < 300 &&
+        request.resource.data.favorite is string &&
+        request.resource.data.favorite.size() > 0 &&
+        request.resource.data.favorite.size() < 300 &&
+        request.resource.size < 10 &&
+        request.resource.data.joined_at == request.time;
+
+      allow update: if
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 &&
+        request.resource.data.name.size() < 150 &&
+        request.resource.data.master is string &&
+        request.resource.data.master.size() < 300 &&
+        request.resource.data.favorite is string &&
+        request.resource.data.favorite.size() < 300 &&
+        request.resource.size < 10;
+
+      allow delete: if true;
+    }
+
+    // Lock down everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Kitchen Cabinet — A Standing Committee on Global Cuisine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f6efe1;
+    --paper-deep: #ece2cd;
+    --ink: #2a2520;
+    --ink-soft: #5c4f43;
+    --gold: #a8884a;
+    --gold-deep: #826635;
+    --rule: #c9b88e;
+    --accent: #7a3b2e;
+    --shadow: 0 1px 0 rgba(0,0,0,.04), 0 8px 30px rgba(60,40,20,.10);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(1200px 600px at 50% -200px, #fff7e6 0%, transparent 70%),
+      var(--paper);
+    background-attachment: fixed;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+  .serif { font-family: 'Cormorant Garamond', 'Georgia', serif; }
+
+  /* Header */
+  header {
+    text-align: center;
+    padding: 56px 24px 24px;
+    border-bottom: 1px double var(--rule);
+    background: linear-gradient(180deg, rgba(255,247,230,.6), transparent);
+  }
+  header .crest {
+    color: var(--gold-deep);
+    letter-spacing: .35em;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1.02;
+    margin: 0 0 8px;
+    letter-spacing: .01em;
+  }
+  header .tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(18px, 2.4vw, 24px);
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  header .ornament {
+    color: var(--gold);
+    margin: 18px 0;
+    font-size: 18px;
+    letter-spacing: 1em;
+  }
+  header .charter {
+    max-width: 640px;
+    margin: 12px auto 0;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    line-height: 1.4;
+  }
+
+  /* Nav */
+  nav.tabs {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(246,239,225,.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 10px 16px;
+  }
+  nav.tabs button {
+    background: transparent;
+    border: 0;
+    padding: 10px 16px;
+    font: inherit;
+    font-weight: 500;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 999px;
+    letter-spacing: .02em;
+    transition: background .15s, color .15s;
+  }
+  nav.tabs button:hover { color: var(--ink); background: rgba(168,136,74,.10); }
+  nav.tabs button.active {
+    color: var(--paper);
+    background: var(--ink);
+  }
+  nav.tabs .sep { width: 1px; background: var(--rule); margin: 6px 4px; }
+
+  /* Container */
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 20px 80px;
+  }
+
+  /* Section heading */
+  .section-head {
+    text-align: center;
+    margin: 24px 0 18px;
+  }
+  .section-head .eyebrow {
+    color: var(--gold-deep);
+    letter-spacing: .3em;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+  .section-head h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 42px);
+    margin: 6px 0 4px;
+  }
+  .section-head p {
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    margin: 0;
+  }
+
+  /* Atlas */
+  .atlas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 24px 0 8px;
+  }
+  .atlas .card {
+    background: #fffaf0;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 18px 18px 16px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .atlas .card::before {
+    content: '';
+    position: absolute; inset: 4px;
+    border: 1px solid rgba(168,136,74,.25);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .atlas .card .label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .atlas .card .stats { display: flex; gap: 18px; align-items: baseline; }
+  .atlas .card .stat .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .atlas .card .stat .key {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--ink-soft);
+    display: block;
+    margin-top: 4px;
+  }
+  .atlas .grand {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .atlas .grand .stat .num { color: var(--paper); }
+  .atlas .grand .stat .key { color: rgba(246,239,225,.7); }
+
+  /* Filters */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 24px 0 18px;
+    padding: 14px 16px;
+    background: #fffaf0;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+  }
+  .toolbar input, .toolbar select {
+    font: inherit;
+    padding: 8px 12px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    border-radius: 4px;
+    color: var(--ink);
+    min-width: 140px;
+  }
+  .toolbar input[type="search"] { flex: 1 1 240px; min-width: 200px; }
+  .toolbar input:focus, .toolbar select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(168,136,74,.15);
+  }
+  .toolbar .count {
+    margin-left: auto;
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+
+  /* Restaurant grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 18px;
+  }
+  .restaurant {
+    background: #fffaf0;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 20px 20px 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .restaurant.pending {
+    border-style: dashed;
+    background: #fffdf6;
+  }
+  .restaurant .pending-flag {
+    position: absolute; top: 14px; right: 14px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    color: var(--gold-deep);
+    background: rgba(168,136,74,.12);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+  .restaurant .name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    padding-right: 60px;
+    line-height: 1.15;
+  }
+  .restaurant .cuisine {
+    font-style: italic;
+    color: var(--ink-soft);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    margin-bottom: 10px;
+  }
+  .restaurant .meta-row {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 2px 0;
+  }
+  .restaurant .meta-row strong {
+    color: var(--ink);
+    font-weight: 500;
+    margin-right: 8px;
+    display: inline-block;
+    min-width: 92px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--gold-deep);
+  }
+  .restaurant .meta-row { display: flex; align-items: baseline; gap: 0; }
+  .restaurant .status {
+    display: inline-block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    padding: 3px 9px;
+    border-radius: 999px;
+    margin-top: 12px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    color: var(--ink-soft);
+  }
+  .status.want    { background: #fff3e6; border-color: #e9b888; color: #8a4a14; }
+  .status.planned { background: #eef3f8; border-color: #a9bfd5; color: #2b4e74; }
+  .status.visited { background: #f0eee9; border-color: #b8ad95; color: #5a4d33; }
+  .status.loved   { background: #fce8e2; border-color: #d99f8a; color: #7a3b2e; }
+  .restaurant .notes {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dotted var(--rule);
+    font-size: 13px;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .restaurant .footer {
+    margin-top: auto;
+    padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    letter-spacing: .04em;
+  }
+  .restaurant .footer a {
+    color: var(--gold-deep);
+    text-decoration: none;
+  }
+  .restaurant .footer a:hover { text-decoration: underline; }
+  .restaurant .actions {
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dotted var(--rule);
+  }
+  .restaurant .actions button {
+    background: none;
+    border: 0;
+    padding: 4px 0;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: color .12s;
+  }
+  .restaurant .actions button:hover { color: var(--ink); }
+  .restaurant .actions .act-delete:hover { color: var(--accent); }
+
+  .member-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: flex-end;
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
+  .member-actions button {
+    background: none;
+    border: 0;
+    padding: 4px 0;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: color .12s;
+  }
+  .member-actions button:hover { color: var(--ink); }
+  .member-actions .act-delete:hover { color: var(--accent); }
+
+  /* Edit banner inside forms */
+  .edit-banner {
+    margin: 0 0 16px;
+    padding: 12px 16px;
+    background: rgba(168,136,74,.14);
+    border: 1px solid var(--gold);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .edit-banner span:first-child { flex: 1; }
+  .edit-banner strong { font-weight: 600; }
+  .edit-banner button {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    color: var(--ink);
+    padding: 5px 12px;
+    font: inherit;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  .edit-banner button:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .empty {
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--ink-soft);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+  }
+
+  /* Submit form */
+  .form-card {
+    background: #fffaf0;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 28px 28px 24px;
+    box-shadow: var(--shadow);
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .form-card::before {
+    content: '';
+    position: absolute; inset: 6px;
+    border: 1px solid rgba(168,136,74,.20);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 16px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+  label.field {
+    display: flex;
+    flex-direction: column;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    color: var(--gold-deep);
+    gap: 5px;
+  }
+  label.field input,
+  label.field select,
+  label.field textarea {
+    font: inherit;
+    font-size: 14px;
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--ink);
+    padding: 9px 12px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    border-radius: 4px;
+  }
+  label.field textarea { resize: vertical; min-height: 70px; }
+  label.field input:focus,
+  label.field select:focus,
+  label.field textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(168,136,74,.15);
+  }
+  .form-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    font: inherit;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    letter-spacing: .02em;
+    transition: transform .05s, background .15s, color .15s;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-primary:hover { background: #1c1814; }
+  .btn-secondary {
+    background: var(--paper);
+    color: var(--ink);
+    border-color: var(--rule);
+  }
+  .btn-secondary:hover { background: var(--paper-deep); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink-soft);
+    border-color: transparent;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+  .submit-help {
+    margin-top: 18px;
+    padding: 14px 16px;
+    background: rgba(168,136,74,.08);
+    border-left: 3px solid var(--gold);
+    font-size: 13px;
+    color: var(--ink-soft);
+    border-radius: 0 4px 4px 0;
+  }
+  .submit-help strong { color: var(--ink); font-weight: 600; }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(20,15,10,.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    max-width: 560px;
+    width: 100%;
+    padding: 26px 26px 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.30);
+  }
+  .modal h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+  .modal p { color: var(--ink-soft); margin: 0 0 14px; font-size: 14px; }
+  .modal .options { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+  .modal .options .btn { justify-content: flex-start; text-align: left; padding: 14px 16px; }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 20px 30px;
+    border-top: 1px double var(--rule);
+    color: var(--ink-soft);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    margin-top: 40px;
+  }
+  footer .ornament {
+    color: var(--gold);
+    margin-bottom: 10px;
+    letter-spacing: 1em;
+  }
+
+  /* Membership */
+  .membership {
+    max-width: 760px;
+    margin: 0 auto;
+    background: #fffaf0;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+  }
+  .members-list { list-style: none; margin: 0; padding: 0; }
+  .members-list li {
+    padding: 14px 0;
+    border-bottom: 1px dotted var(--rule);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .members-list li:last-child { border-bottom: 0; }
+  .members-list li.empty-member {
+    display: block;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--ink-soft);
+    padding: 20px 0;
+    border-bottom: 0;
+  }
+  .members-list .who {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .members-list .dish { font-size: 13px; color: var(--ink-soft); }
+  .members-list .dish .key {
+    display: block;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .2em;
+    color: var(--gold-deep);
+    margin-bottom: 2px;
+  }
+
+  @media (max-width: 720px) {
+    body { line-height: 1.45; }
+
+    header { padding: 32px 16px 18px; }
+    header h1 { font-size: 38px; }
+    header .crest { font-size: 10px; margin-bottom: 14px; }
+    header .tagline { font-size: 17px; }
+    header .charter { font-size: 16px; line-height: 1.4; padding: 0 4px; }
+    header .ornament { font-size: 14px; letter-spacing: .6em; margin: 14px 0; }
+
+    main { padding: 18px 12px 60px; }
+
+    /* Horizontally-scrollable tab strip — better than 4-row wrap on phones */
+    nav.tabs {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      overflow-y: hidden;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 8px 12px;
+      gap: 2px;
+    }
+    nav.tabs::-webkit-scrollbar { display: none; }
+    nav.tabs button {
+      flex: 0 0 auto;
+      padding: 8px 14px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+    nav.tabs .sep { display: none; }
+
+    .section-head { margin: 18px 0 14px; }
+    .section-head h2 { font-size: 26px; }
+    .section-head p { font-size: 16px; }
+
+    .atlas { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+    .atlas .card { padding: 14px 14px 12px; }
+    .atlas .card .label { font-size: 19px; margin-bottom: 6px; }
+    .atlas .card .stat .num { font-size: 26px; }
+    .atlas .card .stats { gap: 14px; }
+
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      padding: 12px;
+    }
+    .toolbar input,
+    .toolbar select,
+    .toolbar input[type="search"] {
+      width: 100%;
+      min-width: 0;
+      flex: none;
+    }
+    .toolbar .count { margin-left: 0; text-align: center; }
+
+    .grid { grid-template-columns: 1fr; gap: 14px; }
+    .restaurant { padding: 16px 16px 14px; }
+    .restaurant .name { font-size: 21px; padding-right: 0; }
+    .restaurant .cuisine { font-size: 16px; }
+
+    .form-card { padding: 22px 18px 18px; }
+    .form-grid { grid-template-columns: 1fr; gap: 12px; }
+    label.field input,
+    label.field select,
+    label.field textarea { font-size: 16px; } /* prevents iOS zoom-on-focus */
+    .form-actions .btn { flex: 1 1 auto; }
+
+    .membership { padding: 18px 16px; }
+    .members-list li { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
+    .members-list .who { font-size: 19px; }
+
+    .conn { bottom: 10px; right: 10px; font-size: 9px; padding: 3px 8px; }
+    .toast { bottom: 16px; font-size: 13px; padding: 12px 18px; }
+
+    footer { padding: 32px 16px 24px; font-size: 16px; margin-top: 24px; }
+    footer .ornament { font-size: 13px; letter-spacing: .6em; }
+  }
+
+  @media (max-width: 380px) {
+    header h1 { font-size: 32px; }
+    .section-head h2 { font-size: 23px; }
+    .atlas { grid-template-columns: 1fr; }
+  }
+
+  /* Primary CTA in the nav */
+  nav.tabs button.primary-cta {
+    background: var(--gold);
+    color: #fff;
+    font-weight: 600;
+  }
+  nav.tabs button.primary-cta:hover { background: var(--gold-deep); color: #fff; }
+  nav.tabs button.primary-cta.active { background: var(--gold-deep); color: #fff; }
+
+  /* Atlas hero CTA */
+  .atlas-cta {
+    text-align: center;
+    margin: 28px 0 8px;
+  }
+  .atlas-cta .btn { font-size: 15px; padding: 12px 26px; }
+
+  /* Atlas loading shimmer */
+  .atlas-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--ink-soft);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    letter-spacing: .02em;
+  }
+
+  /* Empty state CTA */
+  .empty .btn {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: 14px;
+    font-style: normal;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Form sections */
+  .form-section { margin-bottom: 24px; }
+  .form-section:last-of-type { margin-bottom: 0; }
+  .form-section-head {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 0 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink);
+    letter-spacing: .01em;
+  }
+  .form-legend {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+    text-align: right;
+    font-style: italic;
+  }
+  .form-legend em {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Danger button */
+  .btn-danger { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+  .btn-danger:hover { background: #5a2c22; border-color: #5a2c22; }
+
+  /* Modal sits above the toast */
+  .modal-backdrop { z-index: 300; }
+  .modal .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 18px;
+  }
+
+  /* Reset filters button */
+  .toolbar .reset-btn {
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--ink-soft);
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .toolbar .reset-btn:hover { color: var(--ink); border-color: var(--ink-soft); background: var(--paper); }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.25);
+    opacity: 0;
+    transition: opacity .25s, transform .25s;
+    pointer-events: none;
+    z-index: 200;
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.error { background: var(--accent); }
+
+  /* Connection indicator */
+  .conn {
+    position: fixed;
+    bottom: 14px;
+    right: 16px;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: rgba(255,250,240,.8);
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    z-index: 50;
+  }
+  .conn.connected { color: #2f6a3a; }
+  .conn.offline { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="crest">✦ Est. MMXXVI ✦</div>
+  <h1 class="serif">The Kitchen Cabinet</h1>
+  <p class="tagline">A Standing Committee on Global Cuisine</p>
+  <div class="ornament">— ✦ —</div>
+  <p class="charter">
+    Convened to deliberate on the world's restaurants, one continent at a time.<br>
+    Each session: a new cuisine. Each entry: a verdict for the record.
+  </p>
+</header>
+
+<nav class="tabs" id="tabs">
+  <button data-view="atlas" class="active">The Atlas</button>
+  <span class="sep"></span>
+  <button data-view="all">All</button>
+  <button data-view="north-america">🌎 N. America</button>
+  <button data-view="south-america">🌎 S. America</button>
+  <button data-view="africa">🌍 Africa</button>
+  <button data-view="europe">🌍 Europe</button>
+  <button data-view="asia">🌏 Asia</button>
+  <button data-view="australia">🌏 Australia</button>
+  <span class="sep"></span>
+  <button data-view="membership">Membership</button>
+  <button data-view="submit" class="primary-cta">+ Add a Restaurant</button>
+</nav>
+
+<main>
+
+  <!-- ATLAS -->
+  <section class="view active" id="view-atlas">
+    <div class="section-head">
+      <div class="eyebrow">◆ The Atlas ◆</div>
+      <h2>The State of the Committee</h2>
+      <p>A running tally, continent by continent.</p>
+    </div>
+    <div class="atlas" id="atlas-grid"></div>
+    <div class="atlas-cta">
+      <button class="btn btn-primary" data-action="goto-submit">+ Add a Restaurant</button>
+    </div>
+  </section>
+
+  <!-- LIST VIEWS (shared) -->
+  <section class="view" id="view-list">
+    <div class="section-head" id="list-head">
+      <div class="eyebrow"></div>
+      <h2></h2>
+      <p></p>
+    </div>
+    <div class="toolbar">
+      <input type="search" id="search" placeholder="Search restaurants, cuisine, city, dish…" />
+      <select id="filter-continent">
+        <option value="">All continents</option>
+        <option value="north-america">🌎 North America</option>
+        <option value="south-america">🌎 South America</option>
+        <option value="africa">🌍 Africa</option>
+        <option value="europe">🌍 Europe</option>
+        <option value="asia">🌏 Asia</option>
+        <option value="australia">🌏 Australia</option>
+      </select>
+      <select id="filter-status">
+        <option value="">All statuses</option>
+        <option>Want to Try</option>
+        <option>Planned</option>
+        <option>Visited</option>
+        <option>Loved It</option>
+      </select>
+      <select id="filter-price">
+        <option value="">All prices</option>
+        <option>$</option>
+        <option>$$</option>
+        <option>$$$</option>
+        <option>$$$$</option>
+      </select>
+      <select id="sort">
+        <option value="recent">Sort: Recently added</option>
+        <option value="name">Sort: Name</option>
+        <option value="drive">Sort: Closest to Akron</option>
+      </select>
+      <button type="button" class="reset-btn" id="reset-filters">Reset</button>
+      <span class="count" id="result-count"></span>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <!-- SUBMIT -->
+  <section class="view" id="view-submit">
+    <div class="section-head">
+      <div class="eyebrow" id="submit-eyebrow">◆ Submit an Entry ◆</div>
+      <h2 id="submit-title">Propose a Restaurant</h2>
+      <p id="submit-sub">Fill what you know — leave the rest blank.</p>
+    </div>
+    <form class="form-card" id="submit-form" autocomplete="off">
+      <div class="edit-banner" id="edit-banner" hidden>
+        <span><strong>Amending:</strong> <span id="edit-banner-name"></span></span>
+        <button type="button" id="cancel-edit-r">Cancel</button>
+      </div>
+      <div class="form-legend">Fields marked <em>*</em> are required.</div>
+
+      <div class="form-section">
+        <h3 class="form-section-head">The Restaurant</h3>
+        <div class="form-grid">
+          <label class="field full">
+            <span>Restaurant *</span>
+            <input name="name" required placeholder="e.g. Sakura Ramen House" />
+          </label>
+          <label class="field">
+            <span>Continent *</span>
+            <select name="continent" required>
+              <option value="">— choose —</option>
+              <option value="north-america">🌎 North America</option>
+              <option value="south-america">🌎 South America</option>
+              <option value="africa">🌍 Africa</option>
+              <option value="europe">🌍 Europe</option>
+              <option value="asia">🌏 Asia</option>
+              <option value="australia">🌏 Australia</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Cuisine / Country</span>
+            <input name="cuisine" placeholder="e.g. Japanese / Tokyo style" />
+          </label>
+          <label class="field full">
+            <span>Added By *</span>
+            <input name="added_by" required placeholder="Your name" />
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-head">Where it is</h3>
+        <div class="form-grid">
+          <label class="field full">
+            <span>Address</span>
+            <input name="address" placeholder="Street, suite, etc." />
+          </label>
+          <label class="field">
+            <span>City</span>
+            <input name="city" placeholder="e.g. Cleveland, OH" />
+          </label>
+          <label class="field">
+            <span>Phone</span>
+            <input name="phone" placeholder="(330) 555-0142" />
+          </label>
+          <label class="field full">
+            <span>Website</span>
+            <input name="website" type="url" placeholder="https://..." />
+          </label>
+          <label class="field">
+            <span>Price</span>
+            <select name="price">
+              <option value="">—</option>
+              <option>$</option>
+              <option>$$</option>
+              <option>$$$</option>
+              <option>$$$$</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Drive from Akron (min)</span>
+            <input name="drive" type="number" min="0" placeholder="e.g. 45" />
+          </label>
+          <label class="field full">
+            <span>Reservations</span>
+            <select name="reservations">
+              <option value="">—</option>
+              <option>Required</option>
+              <option>Recommended</option>
+              <option>Walk-in</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-head">Have you been?</h3>
+        <div class="form-grid">
+          <label class="field">
+            <span>Status</span>
+            <select name="status">
+              <option>Want to Try</option>
+              <option>Planned</option>
+              <option>Visited</option>
+              <option>Loved It</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Date Visited</span>
+            <input name="date_visited" type="date" />
+          </label>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-head">For the Record</h3>
+        <div class="form-grid">
+          <label class="field full">
+            <span>Must-try Dish</span>
+            <input name="must_try" placeholder="e.g. Tonkotsu ramen with extra chashu" />
+          </label>
+          <label class="field full">
+            <span>Dietary Notes</span>
+            <input name="dietary" placeholder="Vegetarian options, gluten-free, etc." />
+          </label>
+          <label class="field full">
+            <span>Notes for the Record</span>
+            <textarea name="notes" placeholder="Any deliberations, recommendations, warnings…"></textarea>
+          </label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary"><span id="submit-btn-label">Submit for the Record</span></button>
+        <button type="reset" class="btn btn-ghost">Clear</button>
+      </div>
+      <div class="submit-help">
+        <strong>How submissions work:</strong> Entries are added to the shared record instantly and appear on every member's device in real time. No approval, no waiting — proceed with deliberation.
+      </div>
+    </form>
+  </section>
+
+  <!-- MEMBERSHIP -->
+  <section class="view" id="view-membership">
+    <div class="section-head">
+      <div class="eyebrow">◆ The Membership ◆</div>
+      <h2>Members in Good Standing</h2>
+      <p>Each with a dish perfected, and a dish beloved.</p>
+    </div>
+    <div class="membership">
+      <ul class="members-list" id="members-list"></ul>
+    </div>
+
+    <div class="section-head" style="margin-top:48px;">
+      <div class="eyebrow">◆ Sign the Register ◆</div>
+      <h2>Join the Cabinet</h2>
+      <p>Two dishes — one mastered, one beloved — is all it takes.</p>
+    </div>
+    <form class="form-card" id="member-form" autocomplete="off">
+      <div class="edit-banner" id="member-banner" hidden>
+        <span><strong>Amending:</strong> <span id="member-banner-name"></span></span>
+        <button type="button" id="cancel-edit-m">Cancel</button>
+      </div>
+      <div class="form-grid">
+        <label class="field full">
+          <span>Name *</span>
+          <input name="name" required placeholder="Your full name" />
+        </label>
+        <label class="field full">
+          <span>Master Dish *</span>
+          <input name="master" required placeholder="The one dish you've truly perfected making" />
+        </label>
+        <label class="field full">
+          <span>Favorite Dish *</span>
+          <input name="favorite" required placeholder="The one you most love to eat" />
+        </label>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary"><span id="member-btn-label">Sign the Register</span></button>
+        <button type="reset" class="btn btn-ghost">Clear</button>
+      </div>
+    </form>
+  </section>
+
+</main>
+
+<footer>
+  <div class="ornament">— ✦ —</div>
+  ✦ In Cuisine We Convene ✦
+</footer>
+
+<!-- Confirmation modal -->
+<div class="modal-backdrop" id="confirm-modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3 id="confirm-title">Confirm</h3>
+    <p id="confirm-message"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-ghost" id="confirm-cancel">Cancel</button>
+      <button type="button" class="btn btn-danger" id="confirm-ok">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+<div class="conn" id="conn-status">● connecting…</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, onSnapshot,
+  query, orderBy, serverTimestamp,
+  doc, updateDoc, deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+
+/* =======================================================================
+   FIREBASE
+   ======================================================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyBGl5TW0ISq9AUdV8zeqcnznp3PXGtvV38",
+  authDomain: "kitchen-cabinet-aff57.firebaseapp.com",
+  projectId: "kitchen-cabinet-aff57",
+  storageBucket: "kitchen-cabinet-aff57.firebasestorage.app",
+  messagingSenderId: "411320605177",
+  appId: "1:411320605177:web:9447bdbf16eb34dc044528",
+  measurementId: "G-NFQ0LL7J8J"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const restaurantsRef = collection(db, "restaurants");
+const membersRef = collection(db, "members");
+
+/* =======================================================================
+   DATA
+   ======================================================================= */
+const CONTINENTS = [
+  { id: "north-america", label: "🌎 North America", tagline: "From taquerías to diners — the home turf, expanded." },
+  { id: "south-america", label: "🌎 South America", tagline: "Asado nights, ceviche days, and everything in between." },
+  { id: "africa",        label: "🌍 Africa",        tagline: "Spices of the Maghreb, stews of the West, and beyond." },
+  { id: "europe",        label: "🌍 Europe",        tagline: "Old-world classics — from trattorias to tavernas." },
+  { id: "asia",          label: "🌏 Asia",          tagline: "The vast and the varied — every region a continent of its own." },
+  { id: "australia",     label: "🌏 Australia",     tagline: "Pacific fusion and beachside grills." },
+];
+
+let restaurants = [];
+let members = [];
+
+/* =======================================================================
+   STATE
+   ======================================================================= */
+let currentView = "atlas";
+let currentContinent = null;
+let editingRestaurantId = null;
+let editingMemberId = null;
+let restaurantsLoaded = false;
+
+/* =======================================================================
+   INIT
+   ======================================================================= */
+function init() {
+  renderMembers();
+  renderAtlas();
+  bindTabs();
+  bindFilters();
+  bindForm();
+  bindMemberForm();
+
+  const qRef = query(restaurantsRef, orderBy("submitted_at", "desc"));
+  onSnapshot(qRef,
+    snapshot => {
+      restaurants = snapshot.docs.map(doc => {
+        const data = doc.data();
+        if (data.submitted_at && typeof data.submitted_at.toDate === "function") {
+          data.submitted_at = data.submitted_at.toDate().toISOString();
+        }
+        return { id: doc.id, ...data };
+      });
+      restaurantsLoaded = true;
+      if (currentView === "atlas") renderAtlas();
+      else if (document.getElementById("view-list").classList.contains("active")) renderList();
+      setStatus("connected");
+    },
+    err => {
+      console.error("Firestore listen failed", err);
+      setStatus("offline");
+      showToast("⚠ Couldn't reach the shared database — " + err.code, "error");
+    }
+  );
+
+  const mRef = query(membersRef, orderBy("joined_at", "asc"));
+  onSnapshot(mRef,
+    snapshot => {
+      members = snapshot.docs.map(doc => {
+        const data = doc.data();
+        if (data.joined_at && typeof data.joined_at.toDate === "function") {
+          data.joined_at = data.joined_at.toDate().toISOString();
+        }
+        return { id: doc.id, ...data };
+      });
+      renderMembers();
+    },
+    err => console.error("Members listen failed", err)
+  );
+}
+
+function setStatus(state) {
+  const el = document.getElementById("conn-status");
+  if (!el) return;
+  if (state === "connected") {
+    el.textContent = "● live";
+    el.className = "conn connected";
+  } else {
+    el.textContent = "● offline";
+    el.className = "conn offline";
+  }
+}
+
+/* =======================================================================
+   TABS
+   ======================================================================= */
+function bindTabs() {
+  document.querySelectorAll("#tabs button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const view = btn.dataset.view;
+      setView(view);
+    });
+  });
+  document.querySelectorAll('[data-action="goto-submit"]').forEach(btn => {
+    btn.addEventListener("click", () => setView("submit"));
+  });
+}
+
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll("#tabs button").forEach(b => {
+    b.classList.toggle("active", b.dataset.view === view);
+  });
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+
+  if (view === "atlas") {
+    document.getElementById("view-atlas").classList.add("active");
+    renderAtlas();
+  } else if (view === "submit") {
+    document.getElementById("view-submit").classList.add("active");
+  } else if (view === "membership") {
+    document.getElementById("view-membership").classList.add("active");
+  } else if (view === "all") {
+    currentContinent = null;
+    showList({ eyebrow: "◆ The Full Record ◆", title: "All Restaurants", sub: "Every continent, every entry." });
+  } else {
+    currentContinent = view;
+    const c = CONTINENTS.find(x => x.id === view);
+    showList({ eyebrow: `◆ ${c.label} ◆`, title: c.label.replace(/^[^A-Za-z]+/, ""), sub: c.tagline });
+  }
+}
+
+function showList({ eyebrow, title, sub }) {
+  const head = document.getElementById("list-head");
+  head.querySelector(".eyebrow").textContent = eyebrow;
+  head.querySelector("h2").textContent = title;
+  head.querySelector("p").textContent = sub;
+  document.getElementById("view-list").classList.add("active");
+  // Continent dropdown only useful on the "All" view; hide when a specific continent tab is active
+  document.getElementById("filter-continent").style.display = currentContinent ? "none" : "";
+  renderList();
+}
+
+/* =======================================================================
+   ATLAS
+   ======================================================================= */
+function renderAtlas() {
+  const grid = document.getElementById("atlas-grid");
+  grid.innerHTML = "";
+
+  if (!restaurantsLoaded) {
+    grid.innerHTML = '<div class="atlas-loading">Convening the committee…</div>';
+    return;
+  }
+
+  let totalList = 0, totalVisited = 0;
+
+  CONTINENTS.forEach(c => {
+    const list = restaurants.filter(r => r.continent === c.id);
+    const visited = list.filter(r => r.status === "Visited" || r.status === "Loved It").length;
+    totalList += list.length;
+    totalVisited += visited;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="label">${c.label}</div>
+      <div class="stats">
+        <div class="stat"><div class="num">${list.length}</div><span class="key">On the list</span></div>
+        <div class="stat"><div class="num">${visited}</div><span class="key">Visited</span></div>
+      </div>
+    `;
+    card.style.cursor = "pointer";
+    card.addEventListener("click", () => setView(c.id));
+    grid.appendChild(card);
+  });
+
+  const grand = document.createElement("div");
+  grand.className = "card grand";
+  grand.innerHTML = `
+    <div class="label">Grand Total</div>
+    <div class="stats">
+      <div class="stat"><div class="num">${totalList}</div><span class="key">On the list</span></div>
+      <div class="stat"><div class="num">${totalVisited}</div><span class="key">Visited</span></div>
+    </div>
+  `;
+  grid.appendChild(grand);
+}
+
+/* =======================================================================
+   LIST
+   ======================================================================= */
+function bindFilters() {
+  ["search", "filter-continent", "filter-status", "filter-price", "sort"].forEach(id => {
+    document.getElementById(id).addEventListener("input", renderList);
+  });
+  document.getElementById("reset-filters").addEventListener("click", resetFilters);
+}
+
+function resetFilters() {
+  document.getElementById("search").value = "";
+  document.getElementById("filter-continent").value = "";
+  document.getElementById("filter-status").value = "";
+  document.getElementById("filter-price").value = "";
+  document.getElementById("sort").value = "recent";
+  renderList();
+}
+
+function renderList() {
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const continentFilter = document.getElementById("filter-continent").value;
+  const status = document.getElementById("filter-status").value;
+  const price = document.getElementById("filter-price").value;
+  const sortKey = document.getElementById("sort").value;
+
+  let rows = restaurants;
+  if (currentContinent) rows = rows.filter(r => r.continent === currentContinent);
+  if (continentFilter) rows = rows.filter(r => r.continent === continentFilter);
+  if (status) rows = rows.filter(r => r.status === status);
+  if (price) rows = rows.filter(r => r.price === price);
+  if (q) {
+    rows = rows.filter(r => {
+      const blob = [r.name, r.cuisine, r.city, r.must_try, r.notes, r.added_by]
+        .filter(Boolean).join(" ").toLowerCase();
+      return blob.includes(q);
+    });
+  }
+
+  if (sortKey === "name") {
+    rows = [...rows].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  } else if (sortKey === "recent") {
+    rows = [...rows].sort((a, b) => (b.submitted_at || "").localeCompare(a.submitted_at || ""));
+  } else if (sortKey === "drive") {
+    rows = [...rows].sort((a, b) => (Number(a.drive) || 9999) - (Number(b.drive) || 9999));
+  }
+
+  document.getElementById("result-count").textContent =
+    rows.length === 1 ? "1 entry" : `${rows.length} entries`;
+
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  if (rows.length === 0) {
+    const anyFilter = q || continentFilter || status || price;
+    const msg = anyFilter
+      ? "No entries match the current filters."
+      : "No entries yet — be the first to propose one.";
+    const btnLabel = anyFilter ? "Reset filters" : "+ Add a Restaurant";
+    const btnAction = anyFilter ? "reset" : "submit";
+    const empty = document.createElement("div");
+    empty.className = "empty";
+    empty.style.gridColumn = "1 / -1";
+    empty.innerHTML = `${msg}<br><button class="btn btn-primary" data-empty-action="${btnAction}">${btnLabel}</button>`;
+    empty.querySelector("button").addEventListener("click", () => {
+      if (btnAction === "reset") resetFilters();
+      else setView("submit");
+    });
+    grid.appendChild(empty);
+    return;
+  }
+  rows.forEach(r => grid.appendChild(restaurantCard(r)));
+}
+
+function statusClass(s) {
+  if (!s) return "";
+  if (s === "Want to Try") return "want";
+  if (s === "Planned") return "planned";
+  if (s === "Visited") return "visited";
+  if (s === "Loved It") return "loved";
+  return "";
+}
+
+function esc(s) {
+  return String(s || "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+}
+
+function restaurantCard(r) {
+  const el = document.createElement("article");
+  el.className = "restaurant";
+  const continentLabel = (CONTINENTS.find(c => c.id === r.continent) || {}).label || "";
+  const website = r.website ? `<a href="${esc(r.website)}" target="_blank" rel="noopener">website ↗</a>` : "";
+  el.innerHTML = `
+    <h3 class="name">${esc(r.name || "Untitled")}</h3>
+    <div class="cuisine">${esc(r.cuisine || continentLabel)}</div>
+    ${r.city ? `<div class="meta-row"><strong>📍 Location</strong>${esc(r.city)}${r.address ? " · " + esc(r.address) : ""}</div>` : ""}
+    ${r.must_try ? `<div class="meta-row"><strong>🍽 Must-try</strong>${esc(r.must_try)}</div>` : ""}
+    ${r.price ? `<div class="meta-row"><strong>💵 Price</strong>${esc(r.price)}</div>` : ""}
+    ${r.drive ? `<div class="meta-row"><strong>🚗 Drive</strong>${esc(r.drive)} min from Akron</div>` : ""}
+    ${r.reservations ? `<div class="meta-row"><strong>🪑 Reservations</strong>${esc(r.reservations)}</div>` : ""}
+    ${r.dietary ? `<div class="meta-row"><strong>🌱 Dietary</strong>${esc(r.dietary)}</div>` : ""}
+    ${r.phone ? `<div class="meta-row"><strong>☎ Phone</strong>${esc(r.phone)}</div>` : ""}
+    ${r.status ? `<span class="status ${statusClass(r.status)}">${esc(r.status)}</span>` : ""}
+    ${r.notes ? `<div class="notes">"${esc(r.notes)}"</div>` : ""}
+    <div class="footer">
+      <span>${r.added_by ? "— " + esc(r.added_by) : ""}${r.date_visited ? " · " + esc(r.date_visited) : ""}</span>
+      ${website}
+    </div>
+    <div class="actions">
+      <button type="button" class="act-edit">Edit</button>
+      <button type="button" class="act-delete">Delete</button>
+    </div>
+  `;
+  el.querySelector(".act-edit").addEventListener("click", () => editRestaurant(r));
+  el.querySelector(".act-delete").addEventListener("click", () => deleteRestaurant(r));
+  return el;
+}
+
+function editRestaurant(r) {
+  editingRestaurantId = r.id;
+  const form = document.getElementById("submit-form");
+  form.reset();
+  ["name","continent","cuisine","address","city","phone","website","price","drive","status","date_visited","added_by","reservations","must_try","dietary","notes"].forEach(k => {
+    const field = form.elements[k];
+    if (field && r[k] != null) field.value = r[k];
+  });
+  document.getElementById("edit-banner-name").textContent = r.name || "this entry";
+  document.getElementById("edit-banner").hidden = false;
+  document.getElementById("submit-btn-label").textContent = "Save Changes";
+  document.getElementById("submit-eyebrow").textContent = "◆ Amend an Entry ◆";
+  document.getElementById("submit-title").textContent = "Edit Restaurant";
+  document.getElementById("submit-sub").textContent = "Update what's known. The change is broadcast immediately.";
+  setView("submit");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function cancelEditRestaurant() {
+  editingRestaurantId = null;
+  document.getElementById("submit-form").reset();
+  document.getElementById("edit-banner").hidden = true;
+  document.getElementById("submit-btn-label").textContent = "Submit for the Record";
+  document.getElementById("submit-eyebrow").textContent = "◆ Submit an Entry ◆";
+  document.getElementById("submit-title").textContent = "Propose a Restaurant";
+  document.getElementById("submit-sub").textContent = "Fill what you know — leave the rest blank.";
+}
+
+async function deleteRestaurant(r) {
+  const ok = await confirmAction({
+    title: "Strike from the record?",
+    message: `"${r.name}" will be removed permanently. This cannot be undone.`,
+    okLabel: "Delete entry"
+  });
+  if (!ok) return;
+  try {
+    await deleteDoc(doc(restaurantsRef, r.id));
+    showToast(`✓ "${r.name}" removed.`);
+  } catch (err) {
+    console.error(err);
+    showToast("⚠ Couldn't delete: " + err.message, "error");
+  }
+}
+
+/* =======================================================================
+   MEMBERSHIP
+   ======================================================================= */
+function renderMembers() {
+  const ul = document.getElementById("members-list");
+  ul.innerHTML = "";
+  if (members.length === 0) {
+    const li = document.createElement("li");
+    li.className = "empty-member";
+    li.innerHTML = `No members yet — sign the register below to be the first.<br><button class="btn btn-primary" type="button" style="margin-top:14px;">Sign the Register</button>`;
+    li.querySelector("button").addEventListener("click", () => {
+      document.getElementById("member-form").scrollIntoView({ behavior: "smooth", block: "start" });
+      document.getElementById("member-form").elements["name"].focus();
+    });
+    ul.appendChild(li);
+    return;
+  }
+  members.forEach(m => {
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <div class="who">${esc(m.name)}</div>
+      <div class="dish"><span class="key">Master Dish</span>${esc(m.master)}</div>
+      <div class="dish"><span class="key">Favorite Dish</span>${esc(m.favorite)}</div>
+      <div class="member-actions">
+        <button type="button" class="act-edit">Edit</button>
+        <button type="button" class="act-delete">Delete</button>
+      </div>
+    `;
+    li.querySelector(".act-edit").addEventListener("click", () => editMember(m));
+    li.querySelector(".act-delete").addEventListener("click", () => deleteMember(m));
+    ul.appendChild(li);
+  });
+}
+
+function editMember(m) {
+  editingMemberId = m.id;
+  const form = document.getElementById("member-form");
+  form.reset();
+  ["name","master","favorite"].forEach(k => {
+    const field = form.elements[k];
+    if (field && m[k] != null) field.value = m[k];
+  });
+  document.getElementById("member-banner-name").textContent = m.name || "this member";
+  document.getElementById("member-banner").hidden = false;
+  document.getElementById("member-btn-label").textContent = "Save Changes";
+  setView("membership");
+  document.getElementById("member-form").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function cancelEditMember() {
+  editingMemberId = null;
+  document.getElementById("member-form").reset();
+  document.getElementById("member-banner").hidden = true;
+  document.getElementById("member-btn-label").textContent = "Sign the Register";
+}
+
+async function deleteMember(m) {
+  const ok = await confirmAction({
+    title: "Remove from the membership?",
+    message: `${m.name} will be removed permanently. This cannot be undone.`,
+    okLabel: "Remove member"
+  });
+  if (!ok) return;
+  try {
+    await deleteDoc(doc(membersRef, m.id));
+    showToast(`✓ ${m.name} removed from the membership.`);
+  } catch (err) {
+    console.error(err);
+    showToast("⚠ Couldn't delete: " + err.message, "error");
+  }
+}
+
+function bindMemberForm() {
+  document.getElementById("member-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const entry = {};
+    for (const [k, v] of fd.entries()) {
+      if (typeof v === "string" && v.trim() !== "") entry[k] = v.trim();
+    }
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    const label = document.getElementById("member-btn-label");
+    const orig = label.textContent;
+    btn.disabled = true;
+    label.textContent = editingMemberId ? "Saving…" : "Recording…";
+
+    try {
+      if (editingMemberId) {
+        entry.edited_at = serverTimestamp();
+        await updateDoc(doc(membersRef, editingMemberId), entry);
+        const name = entry.name || "Member";
+        cancelEditMember();
+        showToast(`✓ ${name} updated.`);
+      } else {
+        entry.joined_at = serverTimestamp();
+        await addDoc(membersRef, entry);
+        e.target.reset();
+        showToast("✓ Welcome to the Cabinet, " + entry.name + ".");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("⚠ Couldn't save: " + err.message, "error");
+    } finally {
+      btn.disabled = false;
+      label.textContent = orig;
+    }
+  });
+
+  document.getElementById("member-form").addEventListener("reset", () => {
+    if (editingMemberId) cancelEditMember();
+  });
+  document.getElementById("cancel-edit-m").addEventListener("click", cancelEditMember);
+}
+
+/* =======================================================================
+   SUBMIT
+   ======================================================================= */
+function bindForm() {
+  document.getElementById("submit-form").addEventListener("submit", async e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const entry = {};
+    for (const [k, v] of fd.entries()) {
+      if (typeof v === "string" && v.trim() !== "") entry[k] = v.trim();
+    }
+
+    const btn = e.target.querySelector('button[type="submit"]');
+    const label = document.getElementById("submit-btn-label");
+    const origLabel = label.textContent;
+    btn.disabled = true;
+    label.textContent = editingRestaurantId ? "Saving…" : "Submitting…";
+
+    try {
+      if (editingRestaurantId) {
+        entry.edited_at = serverTimestamp();
+        await updateDoc(doc(restaurantsRef, editingRestaurantId), entry);
+        const name = entry.name || "Entry";
+        cancelEditRestaurant();
+        showToast(`✓ "${name}" updated.`);
+        setView("all");
+      } else {
+        entry.submitted_at = serverTimestamp();
+        await addDoc(restaurantsRef, entry);
+        e.target.reset();
+        showToast("✓ Entry added to the record — visible to every member.");
+        setView("all");
+      }
+    } catch (err) {
+      console.error(err);
+      showToast("⚠ Couldn't save: " + err.message, "error");
+    } finally {
+      btn.disabled = false;
+      label.textContent = origLabel;
+    }
+  });
+
+  document.getElementById("submit-form").addEventListener("reset", () => {
+    if (editingRestaurantId) cancelEditRestaurant();
+  });
+  document.getElementById("cancel-edit-r").addEventListener("click", cancelEditRestaurant);
+}
+
+/* =======================================================================
+   TOAST
+   ======================================================================= */
+function showToast(msg, type = "success") {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.className = "toast " + type + " show";
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove("show"), 3800);
+}
+
+/* =======================================================================
+   CONFIRM MODAL
+   ======================================================================= */
+function confirmAction({ title, message, okLabel = "Delete", danger = true }) {
+  return new Promise(resolve => {
+    const modal = document.getElementById("confirm-modal");
+    const okBtn = document.getElementById("confirm-ok");
+    const cancelBtn = document.getElementById("confirm-cancel");
+    document.getElementById("confirm-title").textContent = title;
+    document.getElementById("confirm-message").textContent = message;
+    okBtn.textContent = okLabel;
+    okBtn.className = "btn " + (danger ? "btn-danger" : "btn-primary");
+    modal.classList.add("open");
+
+    const cleanup = (result) => {
+      modal.classList.remove("open");
+      okBtn.onclick = null;
+      cancelBtn.onclick = null;
+      modal.onclick = null;
+      document.removeEventListener("keydown", onKey);
+      resolve(result);
+    };
+    const onKey = e => {
+      if (e.key === "Escape") cleanup(false);
+      else if (e.key === "Enter") cleanup(true);
+    };
+    okBtn.onclick = () => cleanup(true);
+    cancelBtn.onclick = () => cleanup(false);
+    modal.onclick = e => { if (e.target === modal) cleanup(false); };
+    document.addEventListener("keydown", onKey);
+    setTimeout(() => cancelBtn.focus(), 0);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
