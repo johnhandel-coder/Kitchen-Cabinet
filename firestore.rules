@@ -24,7 +24,7 @@ service cloud.firestore {
           'north-america', 'south-america', 'africa',
           'europe', 'asia', 'australia'
         ] &&
-        request.resource.size < 25 &&
+        request.resource.data.size() < 25 &&
         request.resource.data.submitted_at == request.time;
 
       allow update: if
@@ -35,7 +35,7 @@ service cloud.firestore {
           'north-america', 'south-america', 'africa',
           'europe', 'asia', 'australia'
         ] &&
-        request.resource.size < 25;
+        request.resource.data.size() < 25;
 
       allow delete: if true;
     }
@@ -54,7 +54,7 @@ service cloud.firestore {
         request.resource.data.favorite is string &&
         request.resource.data.favorite.size() > 0 &&
         request.resource.data.favorite.size() < 300 &&
-        request.resource.size < 10 &&
+        request.resource.data.size() < 10 &&
         request.resource.data.joined_at == request.time;
 
       allow update: if
@@ -65,7 +65,7 @@ service cloud.firestore {
         request.resource.data.master.size() < 300 &&
         request.resource.data.favorite is string &&
         request.resource.data.favorite.size() < 300 &&
-        request.resource.size < 10;
+        request.resource.data.size() < 10;
 
       allow delete: if true;
     }

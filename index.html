@@ -1126,7 +1126,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
 import {
   getFirestore, collection, addDoc, onSnapshot,
   query, orderBy, serverTimestamp,
-  doc, updateDoc, deleteDoc
+  doc, updateDoc, deleteDoc, deleteField
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 /* =======================================================================
@@ -1444,9 +1444,11 @@ function restaurantCard(r) {
 }
 
 function editRestaurant(r) {
-  editingRestaurantId = r.id;
   const form = document.getElementById("submit-form");
+  // Reset BEFORE setting the id: reset() fires the "reset" event, whose
+  // handler cancels any in-progress edit and would null the id we just set.
   form.reset();
+  editingRestaurantId = r.id;
   ["name","continent","cuisine","address","city","phone","website","price","drive","status","date_visited","added_by","reservations","must_try","dietary","notes"].forEach(k => {
     const field = form.elements[k];
     if (field && r[k] != null) field.value = r[k];
@@ -1522,9 +1524,9 @@ function renderMembers() {
 }
 
 function editMember(m) {
-  editingMemberId = m.id;
   const form = document.getElementById("member-form");
-  form.reset();
+  form.reset(); // must precede setting the id (see editRestaurant)
+  editingMemberId = m.id;
   ["name","master","favorite"].forEach(k => {
     const field = form.elements[k];
     if (field && m[k] != null) field.value = m[k];
@@ -1576,6 +1578,7 @@ function bindMemberForm() {
 
     try {
       if (editingMemberId) {
+        clearBlankFields(e.target, entry);
         entry.edited_at = serverTimestamp();
         await updateDoc(doc(membersRef, editingMemberId), entry);
         const name = entry.name || "Member";
@@ -1605,6 +1608,14 @@ function bindMemberForm() {
 /* =======================================================================
    SUBMIT
    ======================================================================= */
+// On edit, a field the user blanked out must be removed from the document.
+// updateDoc merges, so omitting it would silently keep the old value.
+function clearBlankFields(form, entry) {
+  for (const el of form.elements) {
+    if (el.name && !(el.name in entry)) entry[el.name] = deleteField();
+  }
+}
+
 function bindForm() {
   document.getElementById("submit-form").addEventListener("submit", async e => {
     e.preventDefault();
@@ -1622,6 +1633,7 @@ function bindForm() {
 
     try {
       if (editingRestaurantId) {
+        clearBlankFields(e.target, entry);
         entry.edited_at = serverTimestamp();
         await updateDoc(doc(restaurantsRef, editingRestaurantId), entry);
         const name = entry.name || "Entry";
