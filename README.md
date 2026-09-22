@@ -1,13 +1,12 @@
 # The Kitchen Cabinet
 
-A Standing Committee on Global Cuisine — a website companion to the original spreadsheet, backed by a real-time shared database. Anyone with the link can browse the record and propose new restaurants from any device; submissions appear on every member's screen instantly.
+A Standing Committee on Global Cuisine — a website companion to the original spreadsheet, backed by a real-time shared database. Anyone with the link can browse the record, propose new restaurants, update statuses, and edit or remove entries from any device; every change appears on every member's screen instantly.
 
 ## Files
 
 - `index.html` — the website (single file, no build step)
-- `firestore.rules` — production security rules for Firestore (paste into Firebase console before day 30)
+- `firestore.rules` — Firestore security rules (must be pasted into the Firebase console; see below)
 - `The_Kitchen_Cabinet.xlsx` — the original spreadsheet (kept for posterity)
-- `restaurants.json` — legacy starter file, no longer used by the site
 
 ## Deploy to GitHub Pages
 
@@ -16,24 +15,33 @@ A Standing Committee on Global Cuisine — a website companion to the original s
 3. In the repo, go to **Settings → Pages**, set **Source** to `Deploy from a branch`, branch `main`, folder `/ (root)`, and save.
 4. After about a minute, your site is live at `https://<your-username>.github.io/kitchen-cabinet/`. Share that link.
 
-## Authorize the live domain in Firebase
+The site uses Firestore only (no Firebase Authentication), so no authorized-domain setup is required.
 
-Once you know the Pages URL:
+## How the record works
 
-1. Firebase Console → **Authentication → Settings → Authorized domains**
-2. Add `<your-username>.github.io`
+The site uses **Firebase Firestore** for shared state. There is no approval step and no login; the database *is* the record.
 
-(`localhost` already works, so local testing needs no setup.)
+- **Propose** — fill out the form. If a restaurant with the same name is already listed, you'll be asked to confirm before a second entry is added.
+- **Change status** — use the dropdown at the bottom of any card (Want to Try → Planned → Visited → Loved It). No need to open the edit form.
+- **Edit** — click *Edit* on a card. The form fills with the entry; *Save Changes* updates it in place. Clearing a field removes it from the entry.
+- **Delete** — click *Delete* and confirm. An *Undo* button appears in the toast for eight seconds; restoring re-stamps the entry's submission time, so it moves to the top of the "recent" sort.
+- The connection indicator at bottom-right shows `● live` when connected, `● offline` if not.
 
-## How submissions work
+Members work the same way on the Membership page: sign the register, edit, or remove (with Undo).
 
-The site uses **Firebase Firestore** for shared state. When a member fills out the form:
+## Security rules
 
-1. The entry is written directly to the `restaurants` collection.
-2. Firestore pushes the change to every connected device in real time — no refresh needed.
-3. The connection indicator at bottom-right shows `● live` when connected, `● offline` if not.
+Firestore starts in **test mode**, which auto-locks after 30 days. Publish the rules in `firestore.rules` before then, and re-publish whenever that file changes:
 
-No maintainer approval step, no `restaurants.json` merging. The database *is* the record.
+1. Firebase Console → **Firestore Database → Rules**
+2. Paste the full contents of `firestore.rules` and click **Publish**
+
+The rules are deliberately open — anyone with the link can read, create, edit, and delete — but every write is validated:
+
+- Restaurants need a name, a submitter (`added_by`), and a valid continent; members need a name and both dishes.
+- Field counts and string lengths are capped.
+- New documents must carry a server timestamp (`submitted_at` / `joined_at`), and that timestamp cannot be changed afterwards.
+- Only http(s) website links are rendered as clickable on the site; anything else is ignored.
 
 ## Free tier — capacity for your group
 
@@ -43,26 +51,14 @@ The Firebase Spark (free) plan covers this site comfortably:
 - For 20-30 members: expect a few hundred reads/day and a handful of writes
 - **No credit card required.** You cannot be billed accidentally on Spark.
 
-## Harden security before day 30
+## Managing data directly
 
-Firestore was started in **test mode**, which auto-locks after 30 days. Before that:
+Everything can be done from the site, but the Firebase console also works:
 
-1. Open `firestore.rules` in this repo.
-2. In Firebase Console → **Firestore Database → Rules**, paste the contents and click **Publish**.
-
-These rules:
-- Allow anyone to read (public list)
-- Allow new submissions if well-formed (name + added_by + valid continent)
-- Block all edits and deletes from the client (you can still manage entries in the Firebase console)
-
-## Editing or removing an entry
-
-Use the Firebase console:
-
-1. Firebase Console → **Firestore Database → Data → `restaurants`**
+1. Firebase Console → **Firestore Database → Data → `restaurants`** (or `members`)
 2. Click an entry to edit fields, or use the menu to delete
 
-Changes appear on the live site within a second.
+Keep `name` and `continent` (restaurants) or `name`, `master`, and `favorite` (members) intact when editing in the console, or later edits from the site will be rejected by the rules.
 
 ## Local preview
 
@@ -72,6 +68,6 @@ Serve over HTTP so ES modules and Firebase work properly:
 python -m http.server 8000
 ```
 
-Then open `http://localhost:8000`.
+Then open `http://localhost:8000`. Local preview talks to the same live database as the deployed site.
 
 ✦ In Cuisine We Convene ✦

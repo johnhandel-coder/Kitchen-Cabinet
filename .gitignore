@@ -1,0 +1,6 @@
+# Claude Code local settings
+.claude/
+
+# Local-only leftovers: superseded first draft and the unused legacy starter file
+index.v1.html
+restaurants.json

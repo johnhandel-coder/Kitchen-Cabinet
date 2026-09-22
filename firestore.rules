@@ -4,7 +4,8 @@ rules_version = '2';
 // before the 30-day test-mode window expires.
 //
 // Trust model: anyone with the link can read, create, edit, or delete.
-// Submissions are still validated for shape (name + valid continent, size caps).
+// Writes are validated for shape (name + valid continent, size caps) and the
+// creation timestamp on each document cannot be altered after the fact.
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -35,7 +36,9 @@ service cloud.firestore {
           'north-america', 'south-america', 'africa',
           'europe', 'asia', 'australia'
         ] &&
-        request.resource.data.size() < 25;
+        request.resource.data.size() < 25 &&
+        // the original submission timestamp is immutable
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['submitted_at']);
 
       allow delete: if true;
     }
@@ -65,7 +68,8 @@ service cloud.firestore {
         request.resource.data.master.size() < 300 &&
         request.resource.data.favorite is string &&
         request.resource.data.favorite.size() < 300 &&
-        request.resource.data.size() < 10;
+        request.resource.data.size() < 10 &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['joined_at']);
 
       allow delete: if true;
     }

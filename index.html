@@ -352,6 +352,23 @@
   }
   .restaurant .actions button:hover { color: var(--ink); }
   .restaurant .actions .act-delete:hover { color: var(--accent); }
+  .restaurant .actions .act-status {
+    margin-right: auto;
+    font: inherit;
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: none;
+    border: 0;
+    border-bottom: 1px dotted var(--rule);
+    border-radius: 0;
+    padding: 4px 0;
+    cursor: pointer;
+    max-width: 50%;
+  }
+  .restaurant .actions .act-status:hover,
+  .restaurant .actions .act-status:focus { color: var(--ink); border-bottom-color: var(--ink); outline: none; }
 
   .member-actions {
     display: flex;
@@ -815,6 +832,21 @@
     transform: translateX(-50%) translateY(0);
   }
   .toast.error { background: var(--accent); }
+  .toast.show { pointer-events: auto; }
+  .toast .toast-action {
+    margin-left: 14px;
+    background: none;
+    border: 1px solid rgba(255,255,255,.55);
+    color: inherit;
+    font: inherit;
+    font-size: 12px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .toast .toast-action:hover { background: rgba(255,255,255,.15); }
 
   /* Connection indicator */
   .conn {
@@ -1126,7 +1158,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
 import {
   getFirestore, collection, addDoc, onSnapshot,
   query, orderBy, serverTimestamp,
-  doc, updateDoc, deleteDoc, deleteField
+  doc, setDoc, updateDoc, deleteDoc, deleteField
 } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
 /* =======================================================================
@@ -1157,6 +1189,8 @@ const CONTINENTS = [
   { id: "asia",          label: "🌏 Asia",          tagline: "The vast and the varied — every region a continent of its own." },
   { id: "australia",     label: "🌏 Australia",     tagline: "Pacific fusion and beachside grills." },
 ];
+
+const STATUSES = ["Want to Try", "Planned", "Visited", "Loved It"];
 
 let restaurants = [];
 let members = [];
@@ -1331,7 +1365,10 @@ function renderAtlas() {
    ======================================================================= */
 function bindFilters() {
   ["search", "filter-continent", "filter-status", "filter-price", "sort"].forEach(id => {
-    document.getElementById(id).addEventListener("input", renderList);
+    const el = document.getElementById(id);
+    // Some older Safari builds don't fire "input" on <select>; listen to both.
+    el.addEventListener("input", renderList);
+    el.addEventListener("change", renderList);
   });
   document.getElementById("reset-filters").addEventListener("click", resetFilters);
 }
@@ -1359,7 +1396,7 @@ function renderList() {
   if (price) rows = rows.filter(r => r.price === price);
   if (q) {
     rows = rows.filter(r => {
-      const blob = [r.name, r.cuisine, r.city, r.must_try, r.notes, r.added_by]
+      const blob = [r.name, r.cuisine, r.city, r.address, r.must_try, r.dietary, r.notes, r.added_by]
         .filter(Boolean).join(" ").toLowerCase();
       return blob.includes(q);
     });
@@ -1412,11 +1449,32 @@ function esc(s) {
   return String(s || "").replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
 }
 
+// Only http(s) links are rendered as clickable; anything else (javascript:, data:, ...) is dropped.
+function isHttpUrl(s) {
+  return typeof s === "string" && /^https?:\/\//i.test(s.trim());
+}
+
+// "2026-09-21" -> "Sep 21, 2026". Parsed by parts to avoid a UTC day shift.
+function fmtDate(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || "").trim());
+  if (!m) return s || "";
+  return new Date(+m[1], +m[2] - 1, +m[3]).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
+function findDuplicate(name) {
+  const key = String(name || "").trim().toLowerCase();
+  if (!key) return null;
+  return restaurants.find(r => String(r.name || "").trim().toLowerCase() === key) || null;
+}
+
 function restaurantCard(r) {
   const el = document.createElement("article");
   el.className = "restaurant";
   const continentLabel = (CONTINENTS.find(c => c.id === r.continent) || {}).label || "";
-  const website = r.website ? `<a href="${esc(r.website)}" target="_blank" rel="noopener">website ↗</a>` : "";
+  const website = isHttpUrl(r.website) ? `<a href="${esc(r.website.trim())}" target="_blank" rel="noopener">website ↗</a>` : "";
+  const statusOptions =
+    (r.status ? "" : '<option value="">Set status…</option>') +
+    STATUSES.map(st => `<option${r.status === st ? " selected" : ""}>${st}</option>`).join("");
   el.innerHTML = `
     <h3 class="name">${esc(r.name || "Untitled")}</h3>
     <div class="cuisine">${esc(r.cuisine || continentLabel)}</div>
@@ -1430,17 +1488,46 @@ function restaurantCard(r) {
     ${r.status ? `<span class="status ${statusClass(r.status)}">${esc(r.status)}</span>` : ""}
     ${r.notes ? `<div class="notes">"${esc(r.notes)}"</div>` : ""}
     <div class="footer">
-      <span>${r.added_by ? "— " + esc(r.added_by) : ""}${r.date_visited ? " · " + esc(r.date_visited) : ""}</span>
+      <span>${r.added_by ? "— " + esc(r.added_by) : ""}${r.date_visited ? " · " + esc(fmtDate(r.date_visited)) : ""}</span>
       ${website}
     </div>
     <div class="actions">
+      <select class="act-status" aria-label="Change status">${statusOptions}</select>
       <button type="button" class="act-edit">Edit</button>
       <button type="button" class="act-delete">Delete</button>
     </div>
   `;
+  el.querySelector(".act-status").addEventListener("change", ev => quickStatus(r, ev.target.value));
   el.querySelector(".act-edit").addEventListener("click", () => editRestaurant(r));
   el.querySelector(".act-delete").addEventListener("click", () => deleteRestaurant(r));
   return el;
+}
+
+// Change status straight from the card without opening the edit form.
+async function quickStatus(r, status) {
+  if (!status || status === r.status) return;
+  try {
+    await updateDoc(doc(restaurantsRef, r.id), { status, edited_at: serverTimestamp() });
+    showToast(`✓ "${r.name}" marked ${status}.`);
+  } catch (err) {
+    console.error(err);
+    showToast("⚠ Couldn't update status: " + err.message, "error");
+    renderList(); // put the dropdown back to the stored value
+  }
+}
+
+// Re-create a just-deleted document under its original id (for Undo).
+// The create rule requires the timestamp field to equal request.time, so it is re-stamped.
+async function restoreDoc(ref, item, stampField, okMsg) {
+  const { id, ...data } = item;
+  data[stampField] = serverTimestamp();
+  try {
+    await setDoc(doc(ref, id), data);
+    showToast("✓ " + okMsg);
+  } catch (err) {
+    console.error(err);
+    showToast("⚠ Couldn't restore: " + err.message, "error");
+  }
 }
 
 function editRestaurant(r) {
@@ -1482,7 +1569,10 @@ async function deleteRestaurant(r) {
   if (!ok) return;
   try {
     await deleteDoc(doc(restaurantsRef, r.id));
-    showToast(`✓ "${r.name}" removed.`);
+    showToast(`✓ "${r.name}" removed.`, "success", {
+      label: "Undo",
+      onAction: () => restoreDoc(restaurantsRef, r, "submitted_at", `"${r.name}" restored.`)
+    });
   } catch (err) {
     console.error(err);
     showToast("⚠ Couldn't delete: " + err.message, "error");
@@ -1554,7 +1644,10 @@ async function deleteMember(m) {
   if (!ok) return;
   try {
     await deleteDoc(doc(membersRef, m.id));
-    showToast(`✓ ${m.name} removed from the membership.`);
+    showToast(`✓ ${m.name} removed from the membership.`, "success", {
+      label: "Undo",
+      onAction: () => restoreDoc(membersRef, m, "joined_at", `${m.name} restored.`)
+    });
   } catch (err) {
     console.error(err);
     showToast("⚠ Couldn't delete: " + err.message, "error");
@@ -1641,6 +1734,16 @@ function bindForm() {
         showToast(`✓ "${name}" updated.`);
         setView("all");
       } else {
+        const dup = findDuplicate(entry.name);
+        if (dup) {
+          const ok = await confirmAction({
+            title: "Already on the record?",
+            message: `"${dup.name}" is already listed${dup.added_by ? " (added by " + dup.added_by + ")" : ""}. Add it again anyway?`,
+            okLabel: "Add anyway",
+            danger: false
+          });
+          if (!ok) return; // finally{} below re-enables the button
+        }
         entry.submitted_at = serverTimestamp();
         await addDoc(restaurantsRef, entry);
         e.target.reset();
@@ -1665,12 +1768,24 @@ function bindForm() {
 /* =======================================================================
    TOAST
    ======================================================================= */
-function showToast(msg, type = "success") {
+function showToast(msg, type = "success", action = null) {
   const toast = document.getElementById("toast");
   toast.textContent = msg;
+  if (action) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "toast-action";
+    btn.textContent = action.label;
+    btn.addEventListener("click", () => {
+      clearTimeout(showToast._t);
+      toast.classList.remove("show");
+      action.onAction();
+    });
+    toast.appendChild(btn);
+  }
   toast.className = "toast " + type + " show";
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => toast.classList.remove("show"), 3800);
+  showToast._t = setTimeout(() => toast.classList.remove("show"), action ? 8000 : 3800);
 }
 
 /* =======================================================================
